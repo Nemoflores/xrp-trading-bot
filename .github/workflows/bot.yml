@@ -1,0 +1,30 @@
+name: XRP Trading Bot
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # kör var 30:e minut
+  workflow_dispatch:         # gör att du kan starta manuellt
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          pip install python-binance
+
+      - name: Run trading bot
+        env:
+          BINANCE_API_KEY: ${{ secrets.BINANCE_API_KEY }}
+          BINANCE_API_SECRET: ${{ secrets.BINANCE_API_SECRET }}
+        run: |
+          python main.py
